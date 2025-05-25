@@ -1,0 +1,128 @@
+﻿@using transporteCabezal.Models
+@{
+    ViewBag.Title = "Sistema de Transporte de Cabezal";
+    var cabezales = ViewBag.Cabezales as List<Cabezal>;
+    var rutas = ViewBag.Rutas as List<Ruta>;
+    var asignaciones = ViewBag.Asignaciones as List<Asignacion>;
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Sistema de Transporte de Cabezal</h2>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">Registrar Cabezal</div>
+                <div class="card-body">
+                    <form method="post" action="/Transporte/RegistrarCabezal">
+                        <div class="form-group mb-2">
+                            <label>Placa:</label>
+                            <input type="text" name="placa" class="form-control" required />
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Tipo:</label>
+                            <input type="text" name="tipo" class="form-control" required />
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Estado:</label>
+                            <input type="text" name="estado" class="form-control" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">Registrar Ruta</div>
+                <div class="card-body">
+                    <form method="post" action="/Transporte/RegistrarRuta">
+                        <div class="form-group mb-2">
+                            <label>Origen:</label>
+                            <input type="text" name="origen" class="form-control" required />
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Destino:</label>
+                            <input type="text" name="destino" class="form-control" required />
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Fecha y Hora:</label>
+                            <input type="datetime-local" name="fechaHora" class="form-control" required />
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Distancia (km):</label>
+                            <input type="number" step="0.01" name="distancia" class="form-control" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Asignar Cabezal a Ruta</div>
+        <div class="card-body">
+            <form method="post" action="/Transporte/AsignarCabezal" class="row g-3">
+                <div class="col-md-5">
+                    <label>Cabezal:</label>
+                    <select name="idCabezal" class="form-select">
+                        @foreach (var c in cabezales)
+                        {
+                            <option value="@c.IdCabezal">@c.Placa</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label>Ruta:</label>
+                    <select name="idRuta" class="form-select">
+                        @foreach (var r in rutas)
+                        {
+                            <option value="@r.IdRuta">@r.Origen - @r.Destino</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success">Asignar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">Asignaciones Realizadas</div>
+        <div class="card-body">
+            @if (asignaciones.Any())
+            {
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cabezal</th>
+                            <th>Ruta</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in asignaciones)
+                        {
+                            var cabezal = cabezales.FirstOrDefault(x => x.IdCabezal == a.IdCabezal);
+                            var ruta = rutas.FirstOrDefault(x => x.IdRuta == a.IdRuta);
+                            <tr>
+                                <td>@a.IdAsignacion</td>
+                                <td>@cabezal?.Placa</td>
+                                <td>@ruta?.Origen - @ruta?.Destino</td>
+                                <td>@a.FechaAsignacion.ToString("g")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No hay asignaciones registradas.</p>
+            }
+        </div>
+    </div>
+</div>

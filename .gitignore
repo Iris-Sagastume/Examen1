@@ -1,0 +1,27 @@
+﻿# Archivos y carpetas que NO se deben subir a GitHub
+
+# Configuración de usuario y entorno
+.vs/
+*.user
+*.suo
+
+# Carpetas de salida de compilación
+bin/
+obj/
+
+# Archivos temporales
+*.log
+*.tlog
+*.cache
+
+# Configuraciones de publicación
+publish/
+
+# Paquetes y configuración de NuGet
+packages/
+*.nupkg
+project.lock.json
+
+# Archivos de configuración local
+*.dbmdl
+*.vscode
